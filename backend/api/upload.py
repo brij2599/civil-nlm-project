@@ -4,7 +4,7 @@ import shutil
 
 router = APIRouter()
 
-UPLOAD_DIR = "../shared/uploads"
+UPLOAD_DIR = "/Users/brijeshrai/Documents/civil_engg_project/civil-nlm-project/shared/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/upload")
