@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File
 import os
 import shutil
+from services.ocr import extract_text_from_image
 
 router = APIRouter()
 
@@ -12,4 +13,12 @@ async def upload_file(file: UploadFile = File(...)):
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as f:
         shutil.copyfileobj(file.file, f)
-    return {"filename": file.filename, "status": "uploaded"}
+
+    # Run OCR
+    extracted_text = extract_text_from_image(file_path)
+
+    return {
+        "filename": file.filename,
+        "status": "uploaded",
+        "text": extracted_text
+    }

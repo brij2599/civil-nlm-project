@@ -1,0 +1,8 @@
+shared/uploads/
+
+# macOS system file
+.DS_Store
+
+# Python compiled files
+__pycache__/
+*.pyc
