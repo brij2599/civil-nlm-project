@@ -1,0 +1,11 @@
+topic: "Darcy\u2019s Law"
+type: theory
+content: 'The discharge rate is given by:
+
+  {{formula: q = k i A}}
+
+  Below is the seepage diagram.
+
+  {{image: seepage-diagram.png}}'
+source: handwritten
+author: Wife
