@@ -73,6 +73,43 @@ function App() {
     }, 0);
   };
 
+  const handleSaveStructured = async () => {
+    const topic = document.getElementById("topic").value.trim();
+    const type = document.getElementById("type").value.trim();
+    const author = document.getElementById("author").value.trim();
+
+    if (!topic || !type || !ocrText) {
+      alert("Please enter topic, type, and OCR content.");
+      return;
+    }
+
+    const data = {
+      topic,
+      type,
+      text: ocrText,
+      source: docType,
+      author: author || "unknown",
+    };
+
+    try {
+      const res = await fetch("http://localhost:8000/save-structured", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+      if (result.status === "success") {
+        alert("✅ Saved to backend as YAML: " + result.file);
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (err) {
+      alert("❌ Failed to save: " + err.message);
+    }
+  };
+
+
   return (
     <div style={{ padding: "2rem", fontFamily: "Arial", maxWidth: "700px", margin: "auto" }}>
       <h2>📤 Upload Civil Engineering Document</h2>
@@ -127,15 +164,10 @@ function App() {
           <h3>📝 OCR Text (Editable)</h3>
 
           <div style={{ marginBottom: "0.5rem" }}>
-            <button
-              onClick={() => insertTag("{{formula: }}")}
-              style={{ marginRight: "1rem" }}
-            >
+            <button onClick={() => insertTag("{{formula: }}")} style={{ marginRight: "1rem" }}>
               ➕ Formula
             </button>
-            <button
-              onClick={() => insertTag("{{image: filename.png}}")}
-            >
+            <button onClick={() => insertTag("{{image: filename.png}}")}>
               🖼️ Image
             </button>
           </div>
@@ -152,12 +184,33 @@ function App() {
               borderRadius: "5px",
               whiteSpace: "pre-wrap",
             }}
-            ref={(el) => (window.ocrTextarea = el)} // temporary global ref
+            ref={(el) => (window.ocrTextarea = el)}
           />
+
+          <h4 style={{ marginTop: "1rem" }}>🗂️ Save as Structured YAML</h4>
+          <div style={{ marginBottom: "0.5rem" }}>
+            <input placeholder="Topic" id="topic" style={{ marginRight: "1rem" }} />
+            <input placeholder="Type (e.g. theory)" id="type" style={{ marginRight: "1rem" }} />
+            <input placeholder="Author" id="author" />
+          </div>
+
+          <button
+            onClick={handleSaveStructured}
+            style={{
+              backgroundColor: "#2196F3",
+              color: "white",
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            💾 Save as YAML
+          </button>
         </div>
       )}
-          </div>
-        );
-      }
+    </div>
+  );
+}
 
 export default App;
