@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.upload import router as upload_router
+from api import handwritten  # 👈 import new router
 
 app = FastAPI()
 
@@ -14,3 +15,6 @@ app.add_middleware(
 )
 
 app.include_router(upload_router, prefix="/api")
+
+# Include the new route
+app.include_router(handwritten.router)
